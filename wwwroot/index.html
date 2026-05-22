@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sync — 페이지 기반 한줄평</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #fafaf7;
+      --panel: #ffffff;
+      --line: #ececec;
+      --text: #1f1f1f;
+      --muted: #6b6b6b;
+      --accent: #2c5f4e;
+      --accent-hover: #1e4538;
+      --danger: #c0392b;
+      --warn: #d4a017;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    /* ===== Auth screen ===== */
+    .auth-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .auth-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 40px 36px;
+      width: 360px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    }
+    .auth-card h1 {
+      font-size: 28px;
+      margin-bottom: 4px;
+      letter-spacing: -0.5px;
+    }
+    .auth-card .sub { color: var(--muted); margin-bottom: 28px; font-size: 13px; }
+    .tabs { display: flex; gap: 0; margin-bottom: 20px; border-bottom: 1px solid var(--line); }
+    .tab {
+      flex: 1; padding: 10px; text-align: center; cursor: pointer;
+      font-size: 14px; color: var(--muted); border-bottom: 2px solid transparent;
+    }
+    .tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+    /* ===== Forms ===== */
+    .field { margin-bottom: 14px; }
+    .field label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+    .field input, .field textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px;
+      font-size: 14px; font-family: inherit; outline: none; transition: border-color 0.15s;
+    }
+    .field input:focus, .field textarea:focus { border-color: var(--accent); }
+    .field textarea { resize: vertical; min-height: 60px; }
+    button {
+      cursor: pointer; border: none; padding: 10px 16px; border-radius: 8px;
+      font-size: 14px; font-weight: 500; transition: all 0.15s; font-family: inherit;
+    }
+    .btn-primary { background: var(--accent); color: white; width: 100%; padding: 12px; }
+    .btn-primary:hover { background: var(--accent-hover); }
+    .btn-secondary { background: var(--panel); color: var(--text); border: 1px solid var(--line); }
+    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-danger { background: transparent; color: var(--danger); padding: 6px 10px; font-size: 12px; }
+    .btn-danger:hover { background: #fff0ed; }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+    .error { color: var(--danger); font-size: 12px; margin-top: 8px; min-height: 16px; }
+
+    /* ===== App layout ===== */
+    .app { display: none; }
+    .app.show { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+    .sidebar {
+      background: var(--panel); border-right: 1px solid var(--line); padding: 24px 16px;
+    }
+    .brand { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--accent); margin-bottom: 28px; padding: 0 8px; }
+    .user-box { padding: 12px; background: var(--bg); border-radius: 8px; margin-bottom: 20px; }
+    .user-box .name { font-size: 14px; font-weight: 600; }
+    .user-box .email { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .nav { display: flex; flex-direction: column; gap: 2px; }
+    .nav-item {
+      padding: 10px 12px; border-radius: 8px; cursor: pointer; font-size: 14px;
+      color: var(--text); transition: all 0.1s; display: flex; align-items: center; gap: 8px;
+    }
+    .nav-item:hover { background: var(--bg); }
+    .nav-item.active { background: var(--accent); color: white; font-weight: 500; }
+
+    .main { padding: 32px 40px; max-width: 1100px; }
+    .page-title { font-size: 22px; font-weight: 600; margin-bottom: 4px; letter-spacing: -0.3px; }
+    .page-desc { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+    .page { display: none; }
+    .page.show { display: block; }
+
+    /* ===== Search ===== */
+    .search-bar { display: flex; gap: 8px; margin-bottom: 20px; }
+    .search-bar input { flex: 1; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; outline: none; }
+    .search-bar input:focus { border-color: var(--accent); }
+    .search-bar button { padding: 12px 24px; background: var(--accent); color: white; }
+
+    .book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+    .book-card {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px;
+      display: flex; gap: 12px; transition: all 0.15s;
+    }
+    .book-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); border-color: #ddd; }
+    .book-cover {
+      width: 64px; height: 92px; flex-shrink: 0; background: var(--bg); border-radius: 4px;
+      object-fit: cover; border: 1px solid var(--line);
+    }
+    .book-info { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .book-title { font-size: 14px; font-weight: 600; line-height: 1.3; margin-bottom: 4px;
+                  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .book-author { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+    .book-pub { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+    .book-pages { font-size: 11px; color: var(--muted); }
+    .book-actions { margin-top: auto; padding-top: 8px; }
+
+    /* ===== My bookshelf ===== */
+    .shelf-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .shelf-card {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 16px;
+      cursor: pointer; transition: all 0.15s; display: flex; gap: 14px;
+    }
+    .shelf-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.07); border-color: var(--accent); }
+    .shelf-card .progress {
+      height: 4px; background: var(--line); border-radius: 2px; margin-top: 8px; overflow: hidden;
+    }
+    .shelf-card .progress-bar { height: 100%; background: var(--accent); }
+    .shelf-meta { font-size: 11px; color: var(--muted); margin-top: 6px; display: flex; justify-content: space-between; }
+
+    /* ===== Reader view (책 선택 시) ===== */
+    .reader { display: grid; grid-template-columns: 280px 1fr; gap: 28px; }
+    .reader-cover-block { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px; height: fit-content; position: sticky; top: 20px; }
+    .reader-cover-block img { width: 100%; border-radius: 6px; margin-bottom: 14px; }
+    .reader-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .reader-author { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+    .page-control { background: var(--bg); padding: 12px; border-radius: 8px; margin-bottom: 12px; }
+    .page-control label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 6px; }
+    .page-input-row { display: flex; gap: 8px; align-items: center; }
+    .page-input-row input { flex: 1; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; font-size: 13px; }
+    .page-input-row span { font-size: 12px; color: var(--muted); }
+
+    .reader-main { display: flex; flex-direction: column; gap: 20px; }
+    .section-card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+    .section-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .section-title .badge { background: var(--bg); color: var(--muted); padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 500; }
+
+    .review-item { padding: 12px 0; border-bottom: 1px solid var(--line); }
+    .review-item:last-child { border-bottom: none; }
+    .review-page { display: inline-block; background: var(--accent); color: white; font-size: 11px; padding: 2px 8px; border-radius: 10px; margin-bottom: 6px; font-weight: 500; }
+    .review-content { font-size: 14px; line-height: 1.5; margin-bottom: 4px; }
+    .review-meta { font-size: 11px; color: var(--muted); }
+    .empty {
+      text-align: center; padding: 28px; color: var(--muted); font-size: 13px;
+      background: var(--bg); border-radius: 8px;
+    }
+
+    /* ===== My reviews ===== */
+    .my-review-card {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+      padding: 16px; margin-bottom: 12px; display: flex; gap: 14px;
+    }
+    .my-review-card img { width: 48px; height: 70px; object-fit: cover; border-radius: 4px; border: 1px solid var(--line); flex-shrink: 0; }
+    .my-review-card .body { flex: 1; }
+    .my-review-card .book-name { font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--text); color: white; padding: 12px 20px; border-radius: 8px;
+      font-size: 13px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); z-index: 100;
+      opacity: 0; transition: opacity 0.2s; pointer-events: none;
+    }
+    .toast.show { opacity: 1; }
+    .toast.error { background: var(--danger); }
+  </style>
+</head>
+<body>
+
+<!-- ==================== 로그인/회원가입 ==================== -->
+<div id="auth" class="auth-wrap">
+  <div class="auth-card">
+    <h1>Sync</h1>
+    <p class="sub">페이지 기반 한줄평 시스템</p>
+    <div class="tabs">
+      <div class="tab active" data-tab="login">로그인</div>
+      <div class="tab" data-tab="register">회원가입</div>
+    </div>
+    <div id="loginForm">
+      <div class="field"><label>이메일</label><input type="email" id="loginEmail" /></div>
+      <div class="field"><label>비밀번호</label><input type="password" id="loginPw" /></div>
+      <button class="btn-primary" onclick="login()">로그인</button>
+      <div class="error" id="loginErr"></div>
+    </div>
+    <div id="registerForm" style="display:none">
+      <div class="field"><label>이름</label><input type="text" id="regName" /></div>
+      <div class="field"><label>이메일</label><input type="email" id="regEmail" /></div>
+      <div class="field"><label>비밀번호</label><input type="password" id="regPw" /></div>
+      <div class="field"><label>비밀번호 확인</label><input type="password" id="regPwConfirm" /></div>
+      <button class="btn-primary" onclick="register()">가입하기</button>
+      <div class="error" id="regErr"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 메인 앱 ==================== -->
+<div id="app" class="app">
+  <aside class="sidebar">
+    <div class="brand">Sync</div>
+    <div class="user-box">
+      <div class="name" id="userName">—</div>
+      <div class="email" id="userEmail">—</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-item active" data-page="shelf">📚 내 책장</div>
+      <div class="nav-item" data-page="search">🔍 책 검색</div>
+      <div class="nav-item" data-page="myreviews">✍️ 내 감상평</div>
+      <div class="nav-item" onclick="logout()" style="color:var(--danger); margin-top: 20px;">⤴ 로그아웃</div>
+    </nav>
+  </aside>
+
+  <main class="main">
+    <!-- 내 책장 -->
+    <section id="page-shelf" class="page show">
+      <div class="page-title">내 책장</div>
+      <div class="page-desc">읽고 있는 책을 선택하면 다른 사람의 한줄평을 볼 수 있어요.</div>
+      <div id="shelfList" class="shelf-grid"></div>
+    </section>
+
+    <!-- 책 검색 -->
+    <section id="page-search" class="page">
+      <div class="page-title">책 검색</div>
+      <div class="page-desc">알라딘에서 검색해 책장에 추가하세요.</div>
+      <div class="search-bar">
+        <input type="text" id="searchKeyword" placeholder="책 제목을 입력하세요" onkeypress="if(event.key==='Enter')searchBooks()" />
+        <button onclick="searchBooks()">검색</button>
+      </div>
+      <div id="searchResults" class="book-grid"></div>
+    </section>
+
+    <!-- 책 선택 (한줄평 보기/쓰기) -->
+    <section id="page-reader" class="page">
+      <div class="page-title" id="readerTitle">한줄평</div>
+      <div class="page-desc"><span onclick="showPage('shelf')" style="cursor:pointer; color:var(--accent);">← 책장으로</span></div>
+      <div class="reader">
+        <div class="reader-cover-block">
+          <img id="readerCover" src="" alt="" onerror="this.style.display='none'" />
+          <div class="reader-title" id="readerBookTitle">—</div>
+          <div class="reader-author" id="readerAuthor">—</div>
+          <div class="page-control">
+            <label>현재 읽고 있는 페이지</label>
+            <div class="page-input-row">
+              <input type="number" id="currentPageInput" min="0" />
+              <span id="totalPagesLabel">/ —</span>
+            </div>
+            <button class="btn-secondary btn-sm" style="margin-top: 8px; width: 100%;" onclick="updatePage()">진행도 저장 + 한줄평 새로고침</button>
+          </div>
+        </div>
+
+        <div class="reader-main">
+          <div class="section-card">
+            <div class="section-title">📖 가까운 한줄평 <span class="badge">최대 5개, 내 페이지 이하만</span></div>
+            <div id="nearbyReviews"></div>
+          </div>
+
+          <div class="section-card">
+            <div class="section-title">✏️ 한줄평 작성</div>
+            <div class="field">
+              <label>페이지</label>
+              <input type="number" id="reviewPage" min="1" placeholder="작성 페이지" />
+            </div>
+            <div class="field">
+              <label>내용</label>
+              <textarea id="reviewContent" placeholder="이 페이지에서의 한 줄 감상…"></textarea>
+            </div>
+            <button class="btn-primary" style="width:auto; padding: 10px 20px;" onclick="createReview()">등록</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 내 감상평 -->
+    <section id="page-myreviews" class="page">
+      <div class="page-title">내 감상평</div>
+      <div class="page-desc">내가 쓴 모든 한줄평을 모아봅니다.</div>
+      <div id="myReviewsList"></div>
+    </section>
+  </main>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const API = ''; // 같은 origin
+let token = localStorage.getItem('token');
+let user = JSON.parse(localStorage.getItem('user') || 'null');
+let currentBook = null; // { bookId, totalPages, currentPage, ... }
+
+// ===== util =====
+function toast(msg, isErr = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isErr ? ' error' : '');
+  setTimeout(() => t.className = 'toast' + (isErr ? ' error' : ''), 2500);
+}
+
+async function api(path, opts = {}) {
+  const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
+  if (token) headers['Authorization'] = 'Bearer ' + token;
+  const res = await fetch(API + path, { ...opts, headers });
+  const text = await res.text();
+  const data = text ? (() => { try { return JSON.parse(text); } catch { return text; } })() : null;
+  if (!res.ok) {
+    const msg = (data && data.message) || (data && data.title) || res.statusText || '요청 실패';
+    throw new Error(msg);
+  }
+  return data;
+}
+
+// ===== auth =====
+document.querySelectorAll('.tab').forEach(t => {
+  t.onclick = () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    const isLogin = t.dataset.tab === 'login';
+    document.getElementById('loginForm').style.display = isLogin ? 'block' : 'none';
+    document.getElementById('registerForm').style.display = isLogin ? 'none' : 'block';
+  };
+});
+
+async function login() {
+  const email = document.getElementById('loginEmail').value;
+  const password = document.getElementById('loginPw').value;
+  try {
+    const r = await api('/api/auth/login', { method: 'POST', body: JSON.stringify({ email, password }) });
+    token = r.accessToken; user = r.user;
+    localStorage.setItem('token', token); localStorage.setItem('user', JSON.stringify(user));
+    showApp();
+  } catch (e) { document.getElementById('loginErr').textContent = e.message; }
+}
+
+async function register() {
+  const name = document.getElementById('regName').value;
+  const email = document.getElementById('regEmail').value;
+  const password = document.getElementById('regPw').value;
+  const passwordConfirm = document.getElementById('regPwConfirm').value;
+  try {
+    const r = await api('/api/auth/register', { method: 'POST', body: JSON.stringify({ name, email, password, passwordConfirm }) });
+    token = r.accessToken; user = r.user;
+    localStorage.setItem('token', token); localStorage.setItem('user', JSON.stringify(user));
+    showApp();
+  } catch (e) { document.getElementById('regErr').textContent = e.message; }
+}
+
+function logout() {
+  token = null; user = null;
+  localStorage.removeItem('token'); localStorage.removeItem('user');
+  document.getElementById('app').classList.remove('show');
+  document.getElementById('auth').style.display = 'flex';
+}
+
+function showApp() {
+  document.getElementById('auth').style.display = 'none';
+  document.getElementById('app').classList.add('show');
+  document.getElementById('userName').textContent = user.name;
+  document.getElementById('userEmail').textContent = user.email;
+  loadShelf();
+}
+
+// ===== navigation =====
+document.querySelectorAll('.nav-item[data-page]').forEach(n => {
+  n.onclick = () => showPage(n.dataset.page);
+});
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
+  document.getElementById('page-' + name).classList.add('show');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navItem = document.querySelector(`.nav-item[data-page="${name}"]`);
+  if (navItem) navItem.classList.add('active');
+  if (name === 'shelf') loadShelf();
+  if (name === 'myreviews') loadMyReviews();
+}
+
+// ===== shelf =====
+async function loadShelf() {
+  const list = document.getElementById('shelfList');
+  list.innerHTML = '<div class="empty">로딩 중…</div>';
+  try {
+    const books = await api('/api/mybooks');
+    if (!books.length) {
+      list.innerHTML = '<div class="empty">아직 등록한 책이 없어요. 책 검색에서 추가해보세요.</div>';
+      return;
+    }
+    list.innerHTML = books.map(b => {
+      const pct = b.totalPages > 0 ? Math.min(100, (b.currentPage / b.totalPages) * 100) : 0;
+      return `
+        <div class="shelf-card" onclick='openReader(${JSON.stringify(b)})'>
+          <img class="book-cover" src="${b.cover || ''}" onerror="this.style.visibility='hidden'" />
+          <div class="book-info">
+            <div class="book-title">${escapeHtml(b.title)}</div>
+            <div class="book-author">${escapeHtml(b.author)}</div>
+            <div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div>
+            <div class="shelf-meta">
+              <span>${b.currentPage} / ${b.totalPages || '?'} p</span>
+              <button class="btn-danger btn-sm" onclick="event.stopPropagation(); removeBook(${b.bookId})">제거</button>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  } catch (e) { list.innerHTML = `<div class="empty">${e.message}</div>`; }
+}
+
+async function removeBook(bookId) {
+  if (!confirm('정말 책장에서 제거할까요?')) return;
+  try { await api('/api/mybooks/' + bookId, { method: 'DELETE' }); toast('제거됨'); loadShelf(); }
+  catch (e) { toast(e.message, true); }
+}
+
+// ===== reader =====
+function openReader(book) {
+  currentBook = book;
+  showPage('reader');
+  document.querySelector('.nav-item[data-page="shelf"]').classList.add('active');
+  document.getElementById('readerTitle').textContent = book.title;
+  document.getElementById('readerBookTitle').textContent = book.title;
+  document.getElementById('readerAuthor').textContent = book.author;
+  document.getElementById('readerCover').src = book.cover || '';
+  document.getElementById('currentPageInput').value = book.currentPage;
+  document.getElementById('totalPagesLabel').textContent = '/ ' + (book.totalPages || '?');
+  loadNearby();
+}
+
+async function loadNearby() {
+  if (!currentBook) return;
+  const target = document.getElementById('nearbyReviews');
+  target.innerHTML = '<div class="empty">로딩 중…</div>';
+  try {
+    const reviews = await api(`/api/review/near?bookId=${currentBook.bookId}&currentPage=${currentBook.currentPage}&take=5`);
+    if (!reviews.length) { target.innerHTML = '<div class="empty">현재 페이지 이하 한줄평이 없어요.</div>'; return; }
+    target.innerHTML = reviews.map(r => `
+      <div class="review-item">
+        <span class="review-page">${r.page}p</span>
+        <div class="review-content">${escapeHtml(r.content)}</div>
+        <div class="review-meta">작성자 #${r.writerId} · ${formatDate(r.createdAt)}</div>
+      </div>`).join('');
+  } catch (e) { target.innerHTML = `<div class="empty">${e.message}</div>`; }
+}
+
+async function updatePage() {
+  if (!currentBook) return;
+  const newPage = parseInt(document.getElementById('currentPageInput').value, 10);
+  if (isNaN(newPage)) return toast('숫자를 입력해주세요', true);
+  try {
+    const updated = await api(`/api/mybooks/${currentBook.bookId}/page`, {
+      method: 'PATCH', body: JSON.stringify({ currentPage: newPage })
+    });
+    currentBook = updated;
+    toast('진행도 저장됨');
+    loadNearby();
+  } catch (e) { toast(e.message, true); }
+}
+
+async function createReview() {
+  if (!currentBook) return;
+  const page = parseInt(document.getElementById('reviewPage').value, 10);
+  const content = document.getElementById('reviewContent').value.trim();
+  if (!page || !content) return toast('페이지와 내용을 입력해주세요', true);
+  try {
+    await api('/api/review', { method: 'POST', body: JSON.stringify({ bookId: currentBook.bookId, page, content }) });
+    toast('한줄평 등록됨');
+    document.getElementById('reviewPage').value = '';
+    document.getElementById('reviewContent').value = '';
+    loadNearby();
+  } catch (e) { toast(e.message, true); }
+}
+
+// ===== search =====
+async function searchBooks() {
+  const kw = document.getElementById('searchKeyword').value.trim();
+  if (!kw) return;
+  const results = document.getElementById('searchResults');
+  results.innerHTML = '<div class="empty">검색 중…</div>';
+  try {
+    const list = await api('/api/library/search?keyword=' + encodeURIComponent(kw));
+    if (!list.length) { results.innerHTML = '<div class="empty">결과 없음</div>'; return; }
+    results.innerHTML = list.map(b => `
+      <div class="book-card">
+        <img class="book-cover" src="${b.cover || ''}" onerror="this.style.visibility='hidden'" />
+        <div class="book-info">
+          <div class="book-title">${escapeHtml(b.title)}</div>
+          <div class="book-author">${escapeHtml(b.author)}</div>
+          <div class="book-pub">${escapeHtml(b.publisher || '')}</div>
+          <div class="book-actions">
+            <button class="btn-secondary btn-sm" onclick="addBook('${b.isbn13}')">+ 내 책장에 추가</button>
+          </div>
+        </div>
+      </div>`).join('');
+  } catch (e) { results.innerHTML = `<div class="empty">${e.message}</div>`; }
+}
+
+async function addBook(isbn13) {
+  try {
+    await api('/api/mybooks', { method: 'POST', body: JSON.stringify({ isbn13 }) });
+    toast('책장에 추가됨');
+  } catch (e) { toast(e.message, true); }
+}
+
+// ===== my reviews =====
+async function loadMyReviews() {
+  const list = document.getElementById('myReviewsList');
+  list.innerHTML = '<div class="empty">로딩 중…</div>';
+  try {
+    const reviews = await api('/api/review/mine');
+    if (!reviews.length) { list.innerHTML = '<div class="empty">아직 작성한 감상평이 없어요.</div>'; return; }
+    list.innerHTML = reviews.map(r => `
+      <div class="my-review-card">
+        <img src="${r.cover || ''}" onerror="this.style.visibility='hidden'" />
+        <div class="body">
+          <div class="book-name">${escapeHtml(r.bookTitle)} · ${r.page}p</div>
+          <div class="review-content">${escapeHtml(r.content)}</div>
+          <div class="review-meta">${formatDate(r.createdAt)}</div>
+        </div>
+      </div>`).join('');
+  } catch (e) { list.innerHTML = `<div class="empty">${e.message}</div>`; }
+}
+
+// ===== helpers =====
+function escapeHtml(s) {
+  return (s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function formatDate(iso) {
+  const d = new Date(iso);
+  return `${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;
+}
+
+// 자동 로그인
+if (token && user) showApp();
+</script>
+</body>
+</html>
