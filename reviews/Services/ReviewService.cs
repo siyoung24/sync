@@ -29,6 +29,10 @@ public class ReviewService : IReviewService
 
         var book = await _db.Books.FirstAsync(b => b.Id == dto.BookId);
 
+        // 스포 방지: 현재 진행한 페이지 이하만 작성 가능
+        if (dto.Page > userBook.CurrentPage)
+            throw new BadHttpRequestException($"현재 페이지({userBook.CurrentPage})보다 뒤의 페이지에는 작성할 수 없습니다. 먼저 진행도를 갱신해주세요.");
+
         // TotalPages 알면 상한 검증, 모르면(0) 통과
         if (book.TotalPages > 0 && dto.Page > book.TotalPages)
             throw new BadHttpRequestException($"페이지는 총 페이지 수({book.TotalPages})를 넘을 수 없습니다.");
@@ -41,10 +45,6 @@ public class ReviewService : IReviewService
             Content = dto.Content.Trim()
         };
         _db.Reviews.Add(review);
-
-        // 진행도 자동 갱신 (감상평 페이지가 더 앞이면 그쪽으로 max)
-        if (dto.Page > userBook.CurrentPage)
-            userBook.CurrentPage = dto.Page;
 
         await _db.SaveChangesAsync();
 
