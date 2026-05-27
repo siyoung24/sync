@@ -22,4 +22,10 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.0.3" />
   </ItemGroup>
 
+	<ItemGroup>
+		<Compile Remove="Sync.WinForms\**\*.cs" />
+		<EmbeddedResource Remove="Sync.WinForms\**\*" />
+		<Content Remove="Sync.WinForms\**\*" />
+		<None Remove="Sync.WinForms\**\*" />
+	</ItemGroup>
 </Project>

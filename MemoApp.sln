@@ -1,10 +1,13 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoApp", "MemoApp.csproj", "{FDDDE829-E78F-006B-E31E-3317BE4F8FE3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sync.WinForms", "..\Sync.WinForms\Sync.WinForms.csproj", "{23C2FC90-9FC1-47B3-87D6-E585C5EE2870}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "솔루션 항목", "솔루션 항목", "{2A3A057F-5D22-31FD-628C-DF5EF75AEF1E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sync.WinForms", "Sync.WinForms\Sync.WinForms.csproj", "{686E20EA-DA56-5270-459B-1AB1CAD2C4DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,10 +19,10 @@ Global
 		{FDDDE829-E78F-006B-E31E-3317BE4F8FE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FDDDE829-E78F-006B-E31E-3317BE4F8FE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FDDDE829-E78F-006B-E31E-3317BE4F8FE3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{23C2FC90-9FC1-47B3-87D6-E585C5EE2870}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{23C2FC90-9FC1-47B3-87D6-E585C5EE2870}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{23C2FC90-9FC1-47B3-87D6-E585C5EE2870}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{23C2FC90-9FC1-47B3-87D6-E585C5EE2870}.Release|Any CPU.Build.0 = Release|Any CPU
+		{686E20EA-DA56-5270-459B-1AB1CAD2C4DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{686E20EA-DA56-5270-459B-1AB1CAD2C4DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{686E20EA-DA56-5270-459B-1AB1CAD2C4DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{686E20EA-DA56-5270-459B-1AB1CAD2C4DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
