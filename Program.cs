@@ -3,6 +3,7 @@ using MemoApp.Data;
 using MemoApp.Services;
 using MemoApp.Books.Services;
 using MemoApp.Reviews.Services;
+using MemoApp.UserBooks.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IUserBookService, UserBookService>();
 builder.Services.AddHttpClient();
 
 builder.Services.AddCors(options =>

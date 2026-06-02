@@ -1,0 +1,11 @@
+# .NET build output
+bin/
+obj/
+
+# IDE
+.vs/
+*.user
+
+# Local secrets / overrides (commit appsettings.json only)
+appsettings.Development.json
+appsettings.Local.json
