@@ -21,22 +21,16 @@ public partial class MemoViewForm : Form
     {
         Controls.Clear();
 
-        AutoScaleMode = AutoScaleMode.None;
-
-        Text = "Sync - 기록보기";
-        StartPosition = FormStartPosition.CenterScreen;
-        Size = new Size(1050, 680);
-        BackColor = ColorTranslator.FromHtml("#f7f7f4");
-        FormBorderStyle = FormBorderStyle.FixedSingle;
-        MaximizeBox = false;
+        AppLayout.SetupPage(this, "Sync - 기록보기");
+        AppLayout.AddSidebar(this, "view");
 
         Label lblTitle = new Label
         {
             Text = "기록보기",
             Font = new Font("맑은 고딕", 24, FontStyle.Bold),
             ForeColor = ColorTranslator.FromHtml("#1f1f1f"),
-            Size = new Size(400, 80),
-            Location = new Point(60, 25),
+            Size = new Size(400, 55),
+            Location = new Point(285, 45),
             TextAlign = ContentAlignment.TopLeft,
             BackColor = ColorTranslator.FromHtml("#f7f7f4")
         };
@@ -48,7 +42,7 @@ public partial class MemoViewForm : Form
             Font = new Font("맑은 고딕", 10, FontStyle.Regular),
             ForeColor = ColorTranslator.FromHtml("#777777"),
             Size = new Size(720, 30),
-            Location = new Point(63, 112),
+            Location = new Point(288, 112),
             TextAlign = ContentAlignment.TopLeft,
             BackColor = ColorTranslator.FromHtml("#f7f7f4")
         };
@@ -60,7 +54,7 @@ public partial class MemoViewForm : Form
             Font = new Font("맑은 고딕", 10, FontStyle.Regular),
             ForeColor = ColorTranslator.FromHtml("#436b55"),
             AutoSize = true,
-            Location = new Point(850, 58),
+            Location = new Point(1035, 58),
             BackColor = ColorTranslator.FromHtml("#f7f7f4"),
             Cursor = Cursors.Hand
         };
@@ -69,8 +63,8 @@ public partial class MemoViewForm : Form
 
         RoundedPanel topCard = new RoundedPanel
         {
-            Size = new Size(900, 150),
-            Location = new Point(60, 160),
+            Size = new Size(860, 150),
+            Location = new Point(285, 160),
             BackColor = Color.White,
             BorderColor = ColorTranslator.FromHtml("#e6e6e6"),
             BorderRadius = 16
@@ -194,8 +188,8 @@ public partial class MemoViewForm : Form
 
         reviewPanel = new FlowLayoutPanel
         {
-            Size = new Size(920, 290),
-            Location = new Point(60, 335),
+            Size = new Size(880, 320),
+            Location = new Point(285, 335),
             BackColor = ColorTranslator.FromHtml("#f7f7f4"),
             AutoScroll = true,
             FlowDirection = FlowDirection.TopDown,
@@ -290,7 +284,7 @@ public partial class MemoViewForm : Form
 
         RoundedPanel card = new RoundedPanel
         {
-            Size = new Size(880, 95),
+            Size = new Size(850, 95),
             BackColor = Color.White,
             BorderColor = ColorTranslator.FromHtml("#e6e6e6"),
             BorderRadius = 14,
@@ -336,7 +330,7 @@ public partial class MemoViewForm : Form
             Font = new Font("맑은 고딕", 8, FontStyle.Regular),
             ForeColor = ColorTranslator.FromHtml("#999999"),
             Size = new Size(130, 24),
-            Location = new Point(740, 35),
+            Location = new Point(705, 35),
             BackColor = Color.White
         };
         card.Controls.Add(lblDate);

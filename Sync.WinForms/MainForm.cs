@@ -12,13 +12,9 @@ public partial class MainForm : Form
     {
         Controls.Clear();
 
-        Text = "Sync - 메인";
-        StartPosition = FormStartPosition.CenterScreen;
-        Size = new Size(1080, 680);
-        BackColor = ColorTranslator.FromHtml("#f7f7f4");
-        FormBorderStyle = FormBorderStyle.FixedSingle;
-        MaximizeBox = false;
-
+        AppLayout.SetupPage(this, "Sync - 메인");
+        AppLayout.AddSidebar(this, "home");
+        
         // 왼쪽 사이드바
         Panel sidebar = new Panel
         {
@@ -92,8 +88,8 @@ public partial class MainForm : Form
             Text = "오늘의 독서 기록을 시작해볼까요?",
             Font = new Font("맑은 고딕", 21, FontStyle.Bold),
             ForeColor = ColorTranslator.FromHtml("#1f1f1f"),
-            Size = new Size(720, 48),
-            Location = new Point(290, 60),
+            Size = new Size(720, 55),
+            Location = new Point(285, 45),
             BackColor = ColorTranslator.FromHtml("#f7f7f4")
         };
         Controls.Add(lblTitle);
@@ -103,8 +99,8 @@ public partial class MainForm : Form
             Text = "읽고 있는 책을 등록하고, 페이지별 한줄평을 남겨보세요.",
             Font = new Font("맑은 고딕", 11, FontStyle.Regular),
             ForeColor = ColorTranslator.FromHtml("#777777"),
-            Size = new Size(720, 30),
-            Location = new Point(293, 115),
+            Size = new Size(760, 30),
+            Location = new Point(288, 112),
             BackColor = ColorTranslator.FromHtml("#f7f7f4")
         };
         Controls.Add(lblSub);
@@ -113,7 +109,7 @@ public partial class MainForm : Form
             "읽고 있는 책 설정",
             "현재 읽는 책을 최대 3권까지 등록하고 관리할 수 있어요.",
             "내 책장 열기",
-            new Point(290, 190)
+            new Point(285, 190)
         );
         Controls.Add(card1);
 
@@ -121,7 +117,7 @@ public partial class MainForm : Form
             "책 검색",
             "알라딘 검색을 통해 읽을 책을 찾고 내 책장에 추가할 수 있어요.",
             "책 검색하기",
-            new Point(635, 190)
+            new Point(630, 190)
         );
         Controls.Add(card2);
 
@@ -129,7 +125,7 @@ public partial class MainForm : Form
             "내가 쓴 기록 모아보기",
             "작성한 한줄평을 책별로 모아보고, 이전 독서 흐름을 다시 확인할 수 있어요.",
             "내 기록 보기",
-            new Point(290, 435)
+            new Point(285, 435)
         );
         Controls.Add(card3);
     }

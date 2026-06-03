@@ -18,26 +18,21 @@ public partial class BookSearchForm : Form
     {
         Controls.Clear();
 
-        AutoScaleMode = AutoScaleMode.None;
-
-        Text = "Sync - 책 검색";
-        StartPosition = FormStartPosition.CenterScreen;
-        Size = new Size(1050, 680);
-        BackColor = ColorTranslator.FromHtml("#f7f7f4");
-        FormBorderStyle = FormBorderStyle.FixedSingle;
-        MaximizeBox = false;
+        AppLayout.SetupPage(this, "Sync - 책 검색");
+        AppLayout.AddSidebar(this, "search");
 
         Label lblTitle = new Label
         {
             Text = "책 검색",
             Font = new Font("맑은 고딕", 24, FontStyle.Bold),
             ForeColor = ColorTranslator.FromHtml("#1f1f1f"),
-            Size = new Size(400, 80),
-            Location = new Point(60, 25),
+            Size = new Size(400, 70),
+            Location = new Point(285, 45),
             TextAlign = ContentAlignment.TopLeft,
             BackColor = ColorTranslator.FromHtml("#f7f7f4")
         };
         Controls.Add(lblTitle);
+        lblTitle.BringToFront();
 
         Label lblSub = new Label
         {
@@ -45,29 +40,18 @@ public partial class BookSearchForm : Form
             Font = new Font("맑은 고딕", 10, FontStyle.Regular),
             ForeColor = ColorTranslator.FromHtml("#777777"),
             Size = new Size(650, 30),
-            Location = new Point(63, 112),
+            Location = new Point(288, 112),
             TextAlign = ContentAlignment.TopLeft,
             BackColor = ColorTranslator.FromHtml("#f7f7f4")
         };
         Controls.Add(lblSub);
+        lblSub.BringToFront();
 
-        Label lblBack = new Label
-        {
-            Text = "← 메인으로",
-            Font = new Font("맑은 고딕", 10, FontStyle.Regular),
-            ForeColor = ColorTranslator.FromHtml("#436b55"),
-            AutoSize = true,
-            Location = new Point(880, 58),
-            BackColor = ColorTranslator.FromHtml("#f7f7f4"),
-            Cursor = Cursors.Hand
-        };
-        lblBack.Click += LblBack_Click;
-        Controls.Add(lblBack);
 
         RoundedPanel searchBox = new RoundedPanel
         {
-            Size = new Size(900, 95),
-            Location = new Point(60, 160),
+            Size = new Size(860, 95),
+            Location = new Point(285, 160),
             BackColor = Color.White,
             BorderColor = ColorTranslator.FromHtml("#e6e6e6"),
             BorderRadius = 16
@@ -76,7 +60,7 @@ public partial class BookSearchForm : Form
 
         txtKeyword = new RoundedTextBox
         {
-            Size = new Size(680, 48),
+            Size = new Size(650, 48),
             Location = new Point(25, 24),
             BorderRadius = 10,
             BorderColor = ColorTranslator.FromHtml("#e2e2e2"),
@@ -89,8 +73,8 @@ public partial class BookSearchForm : Form
         {
             Text = "검색",
             Font = new Font("맑은 고딕", 11, FontStyle.Bold),
-            Size = new Size(150, 48),
-            Location = new Point(725, 24),
+            Size = new Size(130, 48),
+            Location = new Point(700, 24),
             BackColor = ColorTranslator.FromHtml("#436b55"),
             ForeColor = Color.White,
             BorderRadius = 8,
@@ -101,8 +85,8 @@ public partial class BookSearchForm : Form
 
         resultPanel = new FlowLayoutPanel
         {
-            Size = new Size(920, 340),
-            Location = new Point(60, 285),
+            Size = new Size(880, 360),
+            Location = new Point(285, 285),
             BackColor = ColorTranslator.FromHtml("#f7f7f4"),
             AutoScroll = true,
             FlowDirection = FlowDirection.LeftToRight,
@@ -211,7 +195,7 @@ public partial class BookSearchForm : Form
 
         RoundedPanel card = new RoundedPanel
         {
-            Size = new Size(280, 185),
+            Size = new Size(270, 185),
             BackColor = Color.White,
             BorderColor = ColorTranslator.FromHtml("#e6e6e6"),
             BorderRadius = 14,
@@ -282,7 +266,7 @@ public partial class BookSearchForm : Form
             Text = title,
             Font = new Font("맑은 고딕", 10, FontStyle.Bold),
             ForeColor = ColorTranslator.FromHtml("#1f1f1f"),
-            Size = new Size(170, 42),
+            Size = new Size(160, 42),
             Location = new Point(92, 22),
             BackColor = Color.White
         };
@@ -293,7 +277,7 @@ public partial class BookSearchForm : Form
             Text = author,
             Font = new Font("맑은 고딕", 9, FontStyle.Regular),
             ForeColor = ColorTranslator.FromHtml("#666666"),
-            Size = new Size(170, 24),
+            Size = new Size(160, 24),
             Location = new Point(92, 68),
             BackColor = Color.White
         };
@@ -304,7 +288,7 @@ public partial class BookSearchForm : Form
             Text = publisher,
             Font = new Font("맑은 고딕", 8, FontStyle.Regular),
             ForeColor = ColorTranslator.FromHtml("#999999"),
-            Size = new Size(170, 22),
+            Size = new Size(160, 22),
             Location = new Point(92, 94),
             BackColor = Color.White
         };
@@ -314,7 +298,7 @@ public partial class BookSearchForm : Form
         {
             Text = "내 책장에 추가",
             Font = new Font("맑은 고딕", 9, FontStyle.Bold),
-            Size = new Size(220, 36),
+            Size = new Size(210, 36),
             Location = new Point(30, 130),
             BackColor = ColorTranslator.FromHtml("#436b55"),
             ForeColor = Color.White,
@@ -365,14 +349,14 @@ public partial class BookSearchForm : Form
         return card;
     }
 
-    private void LblBack_Click(object? sender, EventArgs e)
-    {
-        MainForm mainForm = new MainForm();
-        mainForm.Show();
-        Close();
-    }
+   
 
     private void BookSearchForm_Load(object sender, EventArgs e)
     {
+    }
+
+    private void BookSearchForm_Load_1(object sender, EventArgs e)
+    {
+
     }
 }

@@ -25,22 +25,16 @@ public partial class MemoWriteForm : Form
     {
         Controls.Clear();
 
-        AutoScaleMode = AutoScaleMode.None;
-
-        Text = "Sync - 기록하기";
-        StartPosition = FormStartPosition.CenterScreen;
-        Size = new Size(1050, 680);
-        BackColor = ColorTranslator.FromHtml("#f7f7f4");
-        FormBorderStyle = FormBorderStyle.FixedSingle;
-        MaximizeBox = false;
+        AppLayout.SetupPage(this, "Sync - 기록하기");
+        AppLayout.AddSidebar(this, "write");
 
         Label lblTitle = new Label
         {
             Text = "기록하기",
             Font = new Font("맑은 고딕", 24, FontStyle.Bold),
             ForeColor = ColorTranslator.FromHtml("#1f1f1f"),
-            Size = new Size(400, 80),
-            Location = new Point(60, 25),
+            Size = new Size(400, 55),
+            Location = new Point(285, 45),
             TextAlign = ContentAlignment.TopLeft,
             BackColor = ColorTranslator.FromHtml("#f7f7f4")
         };
@@ -52,7 +46,7 @@ public partial class MemoWriteForm : Form
             Font = new Font("맑은 고딕", 10, FontStyle.Regular),
             ForeColor = ColorTranslator.FromHtml("#777777"),
             Size = new Size(720, 30),
-            Location = new Point(63, 112),
+            Location = new Point(288, 112),
             TextAlign = ContentAlignment.TopLeft,
             BackColor = ColorTranslator.FromHtml("#f7f7f4")
         };
@@ -64,7 +58,7 @@ public partial class MemoWriteForm : Form
             Font = new Font("맑은 고딕", 10, FontStyle.Regular),
             ForeColor = ColorTranslator.FromHtml("#436b55"),
             AutoSize = true,
-            Location = new Point(850, 58),
+            Location = new Point(1035, 58),
             BackColor = ColorTranslator.FromHtml("#f7f7f4"),
             Cursor = Cursors.Hand
         };
@@ -73,8 +67,8 @@ public partial class MemoWriteForm : Form
 
         RoundedPanel mainCard = new RoundedPanel
         {
-            Size = new Size(900, 440),
-            Location = new Point(60, 170),
+            Size = new Size(860, 440),
+            Location = new Point(285, 170),
             BackColor = Color.White,
             BorderColor = ColorTranslator.FromHtml("#e6e6e6"),
             BorderRadius = 16
@@ -260,7 +254,7 @@ public partial class MemoWriteForm : Form
             Text = "기록 저장",
             Font = new Font("맑은 고딕", 11, FontStyle.Bold),
             Size = new Size(160, 46),
-            Location = new Point(690, 335),
+            Location = new Point(660, 335),
             BackColor = ColorTranslator.FromHtml("#436b55"),
             ForeColor = Color.White,
             BorderRadius = 8,
@@ -379,5 +373,10 @@ public partial class MemoWriteForm : Form
 
     private void MemoWriteForm_Load(object sender, EventArgs e)
     {
+    }
+
+    private void MemoWriteForm_Load_1(object sender, EventArgs e)
+    {
+
     }
 }

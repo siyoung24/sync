@@ -9,6 +9,7 @@ public partial class MyBooksForm : Form
 
     public MyBooksForm()
     {
+
         InitializeComponent();
         BuildMyBooksUI();
     }
@@ -17,22 +18,16 @@ public partial class MyBooksForm : Form
     {
         Controls.Clear();
 
-        AutoScaleMode = AutoScaleMode.None;
-
-        Text = "Sync - 내 책장";
-        StartPosition = FormStartPosition.CenterScreen;
-        Size = new Size(1050, 680);
-        BackColor = ColorTranslator.FromHtml("#f7f7f4");
-        FormBorderStyle = FormBorderStyle.FixedSingle;
-        MaximizeBox = false;
+        AppLayout.SetupPage(this, "Sync - 내 책장");
+        AppLayout.AddSidebar(this, "books");
 
         Label lblTitle = new Label
         {
             Text = "내 책장",
             Font = new Font("맑은 고딕", 24, FontStyle.Bold),
             ForeColor = ColorTranslator.FromHtml("#1f1f1f"),
-            Size = new Size(400, 80),
-            Location = new Point(60, 25),
+            Size = new Size(400, 55),
+            Location = new Point(285, 45),
             TextAlign = ContentAlignment.TopLeft,
             BackColor = ColorTranslator.FromHtml("#f7f7f4")
         };
@@ -44,29 +39,17 @@ public partial class MyBooksForm : Form
             Font = new Font("맑은 고딕", 10, FontStyle.Regular),
             ForeColor = ColorTranslator.FromHtml("#777777"),
             Size = new Size(700, 30),
-            Location = new Point(63, 112),
+            Location = new Point(288, 112),
             TextAlign = ContentAlignment.TopLeft,
             BackColor = ColorTranslator.FromHtml("#f7f7f4")
         };
         Controls.Add(lblSub);
 
-        Label lblBack = new Label
-        {
-            Text = "← 메인으로",
-            Font = new Font("맑은 고딕", 10, FontStyle.Regular),
-            ForeColor = ColorTranslator.FromHtml("#436b55"),
-            AutoSize = true,
-            Location = new Point(880, 58),
-            BackColor = ColorTranslator.FromHtml("#f7f7f4"),
-            Cursor = Cursors.Hand
-        };
-        lblBack.Click += LblBack_Click;
-        Controls.Add(lblBack);
-
+        
         RoundedPanel infoBox = new RoundedPanel
         {
-            Size = new Size(900, 70),
-            Location = new Point(60, 160),
+            Size = new Size(860, 70),
+            Location = new Point(285, 160),
             BackColor = Color.White,
             BorderColor = ColorTranslator.FromHtml("#e6e6e6"),
             BorderRadius = 16
@@ -78,7 +61,7 @@ public partial class MyBooksForm : Form
             Text = "책 검색 화면에서 최대 3권까지 책을 추가할 수 있습니다.",
             Font = new Font("맑은 고딕", 10, FontStyle.Regular),
             ForeColor = ColorTranslator.FromHtml("#666666"),
-            Size = new Size(820, 30),
+            Size = new Size(800, 30),
             Location = new Point(28, 23),
             BackColor = Color.White
         };
@@ -86,8 +69,8 @@ public partial class MyBooksForm : Form
 
         booksPanel = new FlowLayoutPanel
         {
-            Size = new Size(920, 370),
-            Location = new Point(60, 260),
+            Size = new Size(880, 380),
+            Location = new Point(285, 260),
             BackColor = ColorTranslator.FromHtml("#f7f7f4"),
             AutoScroll = true,
             FlowDirection = FlowDirection.LeftToRight,
@@ -160,11 +143,11 @@ public partial class MyBooksForm : Form
     {
         RoundedPanel card = new RoundedPanel
         {
-            Size = new Size(430, 195),
+            Size = new Size(420, 195),
             BackColor = Color.White,
             BorderColor = ColorTranslator.FromHtml("#e6e6e6"),
             BorderRadius = 14,
-            Margin = new Padding(0, 0, 25, 25)
+            Margin = new Padding(0, 0, 20, 25)
         };
 
         RoundedPanel coverBox = new RoundedPanel
@@ -359,13 +342,6 @@ public partial class MyBooksForm : Form
         card.Controls.Add(btnDelete);
 
         return card;
-    }
-
-    private void LblBack_Click(object? sender, EventArgs e)
-    {
-        MainForm mainForm = new MainForm();
-        mainForm.Show();
-        Close();
     }
 
     private void MyBooksForm_Load(object sender, EventArgs e)

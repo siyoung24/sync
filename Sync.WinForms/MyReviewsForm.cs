@@ -19,22 +19,16 @@ public partial class MyReviewsForm : Form
     {
         Controls.Clear();
 
-        AutoScaleMode = AutoScaleMode.None;
-
-        Text = "Sync - 내 작성글";
-        StartPosition = FormStartPosition.CenterScreen;
-        Size = new Size(1050, 680);
-        BackColor = ColorTranslator.FromHtml("#f7f7f4");
-        FormBorderStyle = FormBorderStyle.FixedSingle;
-        MaximizeBox = false;
+        AppLayout.SetupPage(this, "Sync - 내 작성글");
+        AppLayout.AddSidebar(this, "reviews");
 
         Label lblTitle = new Label
         {
             Text = "내가 쓴 기록",
             Font = new Font("맑은 고딕", 24, FontStyle.Bold),
             ForeColor = ColorTranslator.FromHtml("#1f1f1f"),
-            Size = new Size(400, 80),
-            Location = new Point(60, 25),
+            Size = new Size(400, 55),
+            Location = new Point(285, 45),
             TextAlign = ContentAlignment.TopLeft,
             BackColor = ColorTranslator.FromHtml("#f7f7f4")
         };
@@ -46,30 +40,19 @@ public partial class MyReviewsForm : Form
             Font = new Font("맑은 고딕", 10, FontStyle.Regular),
             ForeColor = ColorTranslator.FromHtml("#777777"),
             Size = new Size(760, 30),
-            Location = new Point(63, 112),
+            Location = new Point(288, 112),
             TextAlign = ContentAlignment.TopLeft,
             BackColor = ColorTranslator.FromHtml("#f7f7f4")
         };
         Controls.Add(lblSub);
 
-        Label lblBack = new Label
-        {
-            Text = "← 메인으로",
-            Font = new Font("맑은 고딕", 10, FontStyle.Regular),
-            ForeColor = ColorTranslator.FromHtml("#436b55"),
-            AutoSize = true,
-            Location = new Point(880, 58),
-            BackColor = ColorTranslator.FromHtml("#f7f7f4"),
-            Cursor = Cursors.Hand
-        };
-        lblBack.Click += LblBack_Click;
-        Controls.Add(lblBack);
+        
 
         cmbSort = new ComboBox
         {
             Font = new Font("맑은 고딕", 10),
             Size = new Size(170, 34),
-            Location = new Point(735, 105),
+            Location = new Point(970, 105),
             DropDownStyle = ComboBoxStyle.DropDownList
         };
 
@@ -84,8 +67,8 @@ public partial class MyReviewsForm : Form
 
         reviewPanel = new FlowLayoutPanel
         {
-            Size = new Size(920, 455),
-            Location = new Point(60, 160),
+            Size = new Size(880, 485),
+            Location = new Point(285, 160),
             BackColor = ColorTranslator.FromHtml("#f7f7f4"),
             AutoScroll = true,
             FlowDirection = FlowDirection.TopDown,
@@ -184,7 +167,7 @@ public partial class MyReviewsForm : Form
             Text = bookTitle,
             Font = new Font("맑은 고딕", 14, FontStyle.Bold),
             ForeColor = ColorTranslator.FromHtml("#1f1f1f"),
-            Size = new Size(880, 38),
+            Size = new Size(850, 38),
             TextAlign = ContentAlignment.MiddleLeft,
             BackColor = ColorTranslator.FromHtml("#f7f7f4"),
             Margin = new Padding(0, 10, 0, 5)
@@ -195,7 +178,7 @@ public partial class MyReviewsForm : Form
     {
         RoundedPanel card = new RoundedPanel
         {
-            Size = new Size(880, 105),
+            Size = new Size(850, 105),
             BackColor = Color.White,
             BorderColor = ColorTranslator.FromHtml("#e6e6e6"),
             BorderRadius = 14,
@@ -266,7 +249,7 @@ public partial class MyReviewsForm : Form
             Font = new Font("맑은 고딕", 8, FontStyle.Regular),
             ForeColor = ColorTranslator.FromHtml("#999999"),
             Size = new Size(150, 24),
-            Location = new Point(705, 40),
+            Location = new Point(675, 40),
             TextAlign = ContentAlignment.MiddleRight,
             BackColor = Color.White
         };
