@@ -22,6 +22,11 @@ public class MyBookService : IMyBookService
         if (string.IsNullOrWhiteSpace(dto.Isbn13))
             throw new BadHttpRequestException("ISBN13이 필요합니다.");
 
+        // 책장 3권 제한 (백엔드 검증)
+        var count = await _db.UserBooks.CountAsync(ub => ub.UserId == userId);
+        if (count >= 3)
+            throw new InvalidOperationException("책장에는 최대 3권까지 담을 수 있습니다.");
+
         var isbn = dto.Isbn13.Trim();
 
         // 1. Book upsert (ISBN13 기준 dedup)
