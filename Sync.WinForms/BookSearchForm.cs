@@ -199,7 +199,7 @@ public partial class BookSearchForm : Form
             BackColor = Color.White,
             BorderColor = ColorTranslator.FromHtml("#e6e6e6"),
             BorderRadius = 14,
-            Margin = new Padding(0, 0, 25, 25)
+            Margin = new Padding(0, 0, 10, 20)
         };
 
         // 표지 영역
