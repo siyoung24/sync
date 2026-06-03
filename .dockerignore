@@ -1,0 +1,12 @@
+**/bin
+**/obj
+**/.vs
+**/.vscode
+**/.idea
+**/.git
+**/.gitignore
+**/.dockerignore
+Sync.WinForms/
+appsettings.Development.json
+appsettings.Local.json
+*.user
