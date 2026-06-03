@@ -8,7 +8,7 @@ public static class ApiClient
 {
     private static readonly HttpClient client = new HttpClient();
 
-    public static string BaseUrl { get; set; } = "https://localhost:62776";
+    public static string BaseUrl { get; set; } = "https://sync-uvhf.onrender.com";
 
     public static async Task<AuthResponse> LoginAsync(string email, string password)
     {
