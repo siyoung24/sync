@@ -79,6 +79,13 @@ builder.Services.AddSwaggerGen(opt =>
 
 var app = builder.Build();
 
+// 자동 마이그레이션
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+
 app.UseCors();
 
 app.UseDefaultFiles();
